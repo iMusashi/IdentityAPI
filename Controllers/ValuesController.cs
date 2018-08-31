@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +43,6 @@ namespace IdentityAPI.Controllers
             var identity = GetIdentity(username);
             if (identity == null)
             {
-
                 return Unauthorized();
             }
 
@@ -57,6 +53,9 @@ namespace IdentityAPI.Controllers
         new Claim(JwtRegisteredClaimNames.Sub, username),
         //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim(ClaimTypes.Name, "Keshav"),
+        new Claim(ClaimTypes.Role, "Admin"),
+        new Claim(ClaimTypes.Role, "Security"),
+        new Claim(ClaimTypes.Role, "DSA")
             };
             //var issuer = Configuration["Jwt:Issuer"];
             //var audience = Configuration["Jwt:Audience"];
@@ -78,24 +77,7 @@ namespace IdentityAPI.Controllers
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             
             return Ok(encodedJwt);
-    //        var response = new
-    //        {
-    //            access_token = encodedJwt,
-    //            expires_in = (int)_options.Expiration.TotalSeconds
-    //        };
-
-    //        // Serialize and return the response
-    //        context.Response.ContentType = "application/json";
-    //        context.Response.Cookies.Append(
-    //    "x",
-    //    encodedJwt,
-    //    new CookieOptions()
-    //    {
-    //        Path = "/"
-    //    }
-    //);
-    //        await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-        }
+ }
 
         private Task<ClaimsIdentity> GetIdentity(string username)
         {
